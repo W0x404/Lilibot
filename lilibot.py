@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  botnet_sqli.py
+#  lilibot.py
 #  
 #  Copyright 2015 W. @W0x404
 #  
