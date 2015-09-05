@@ -43,7 +43,7 @@ class DB():
 		print "Gathering database's details..."
 		self.host = "localhost" # replace it by raw_input if you want
 		self.user = "root" # replace it by raw_input if you want
-		self.password = raw_input("Enter passford for " + self.user +": ") # dangerous to write the password
+		self.password = raw_input("Enter password for " + self.user +": ") # dangerous to write the password
 		self.database = "scrapping" # replace it
 		self.db = ""
 		self.cursor = ""
