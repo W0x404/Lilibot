@@ -104,7 +104,7 @@ class Carving():
 	"""
 		The carving creates a bot to carve raw web page. dont forget
 		to insert a first url in the database.
-		> insert into DATABASE value ("cyber-exploit.com");
+		> insert into DATABASE value ("http://cyber-exploit.com","http://cyber-exploit.com");
 	"""
 	def __init__(self, database):
 		self.database = database
