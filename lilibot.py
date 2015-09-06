@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #  
 #  
-import MySQLdb, subprocess, re, thread
+import MySQLdb, subprocess, re, thread, requests, requesocks
  
 class bcolors:
     HEADER = '\033[95m'
@@ -117,45 +117,67 @@ class Carving():
 			self.raw_page = self.get_page()
 			self.carve_url()
 			self.carve_sqli()
-			self.clean_url()
-			self.clean_database()
  
 	   
 	def get_page(self):
 		"""
 			Perform a wget in order to collect the source.
 		"""
+		#Initialize a new wrapped requests object
+		session = requesocks.session()
+		#Use Tor for both HTTP and HTTPS
+		session.proxies = {'http': 'socks5://localhost:9050', 'https': 'socks5://localhost:9050'}
+
 		raw = ""
 		try:
-			raw = subprocess.check_output("wget "+self.url+" -q -O -", shell=True)
+			raw = session.get(self.url)
+			raw = raw.text
+			return raw
 		except:
+			raw = ""
 			pass
-		return raw
+		
 	   
 	def carve_url(self):
 		"""
 			Regex to detect http url. https is not pertinent: too secure.
 			Store the url.
 		"""
-		urls = re.findall('http://[\w]+.[\w]+.[\w]+.[\w]+.[\w]+.[\w]+', self.raw_page)
-		urls = set(urls)
-		#~ if (len(urls) > 0):
-			#~ print bcolors.HEADER +"Adding "+str(len(urls))+bcolors.ENDC+" to the scope. Duplicated url(s) will be ignored."
-			#~ #little weird but working fine.
-			#~ for e in urls:
-				#~ self.database.query('INSERT IGNORE INTO scope VALUES ("%s") ON DUPLICATE KEY UPDATE url = url;' % (e))
+		regex_url = ur"(http://[\.[\w_-][^\[\]<>\n \"\(\)]+]*)"
+		regex_dn = ur"(http://[\.[\w_-]*)"
+		
+		try:
+			urls = re.findall(regex_url, self.raw_page)
+			urls = set(urls)
+			
+			url_dn = list()
+			for e in urls:
+				url_dn.append((re.findall(regex_dn,e), e))
+			
+			if (len(urls) > 0):
+				print bcolors.HEADER +"Adding "+str(len(urls))+bcolors.ENDC+" to the scope. Duplicated url(s) will be ignored."
+				#little weird but working fine.
+				for e in url_dn:
+					if (self.database.query("select count(host) from scope where host like '%s';" % (e[0][0]), r=1)[0][0] < 40 ):
+						q = 'INSERT IGNORE INTO scope VALUES ("%s", "%s") ON DUPLICATE KEY UPDATE url = url;' % (e[0][0], e[1])
+						self.database.query(q)
+		except:
+			pass
 		   
 	def carve_sqli(self):
 		"""
 			Regex to detect php url and store it.
 		"""
-		urls = re.findall('http://[\w]+.[\w]+.[\w]+.[\w]+.[\w]+.[\w]+./[\w]+.php\?[\w]+=[\w]+', self.raw_page)
-		urls = set(urls)
-		if (len(urls) > 0):
-			print bcolors.OKBLUE + bcolors.BOLD + "Adding "+str(len(urls))+ bcolors.ENDC+" to the sqli table. Duplicated url(s) will be ignored."
-			#little weird but working fine.
-			for e in urls:
-				self.database.query('INSERT IGNORE INTO sqli VALUES ("%s") ON DUPLICATE KEY UPDATE url = url;' % (e))
+		try:
+			urls = re.findall('http://[\.[\w_-][^\[\]<>\n "]+.php\?[\w=&]*', self.raw_page)
+			urls = set(urls)
+			if (len(urls) > 0):
+				print bcolors.OKBLUE + bcolors.BOLD + "Adding "+str(len(urls))+ bcolors.ENDC+" to the sqli table. Duplicated url(s) will be ignored."
+				#little weird but working fine.
+				for e in urls:
+					self.database.query('INSERT IGNORE INTO sqli VALUES ("%s") ON DUPLICATE KEY UPDATE url = url;' % (e))
+		except:
+			pass
    
 	def clean_url(self):
 		"""
@@ -164,18 +186,6 @@ class Carving():
 		print "Deleting url ("+ self.url +")from the scope...\n"
 		self.database.query('DELETE FROM scope WHERE url = "%s";' % (self.url))
 		
-	def clean_database(self):
-		"""
-			Delete url where there are too many occurence.. bad way. need to improve it
-		"""
-		self.database.query("delete from scope where url like 'http://bit.ly/%' \
-		or url like '%amazon%' or url like '%google%' or url like '%twitter%' \
-		or url like '%facebook%' or url like '%wikipedia%' or url like '%devianart%' \
-		or url like '%apple.com%' or url like '%typepad%' or url like '%t.co/%' or url like 'http//ads.%' \
-		or url like '%wordpress%' or url like '%stackexchange%' \
-		or url like 'http://blog.%' or url like '%http://blogs.%' \
-		or url like '%theguardian.com%' or url like '%linkedin.com%'\
-		or url like '%tumblr.com%' ")
 		   
 	def rand_url(self):
 		"""
