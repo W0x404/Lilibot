@@ -41,7 +41,8 @@ This url provide a long list of websites. A good start.
 
 #Remote Access / User ( easy ~120 secs )
 If you want to deploy **lilibot** as a master-slave API, you need to set the database on a standalone server and connect by remote access all bots.
-*Connect to your mysql server with your id.*
+So first, first, Connect to the mysql master server with your id.
+Then:
 
 ##Create remote user
 `use lilibot;`</br> 
