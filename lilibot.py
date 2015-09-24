@@ -197,7 +197,7 @@ class Carving():
 		self.url = self.database.query('SELECT url FROM scope ORDER BY RAND() LIMIT 1', r=1)[0][0]
 	   
 def main():
-	parser = argparse.ArgumentParser(description='Process some integers.')
+	parser = argparse.ArgumentParser(description='Start a bot to detect injectable url.')
 	parser.add_argument('--tor', dest='tor', action='store_true', help='Provide connection with Tor.')
 	parser.add_argument('--sqli', dest='sqli', action='store_true', help='Allow looking for sqli url.')
 	parser.add_argument('--sqli-only', dest='sqli-only', action='store_true', help='Only looking for sqli url.')
