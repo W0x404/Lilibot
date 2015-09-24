@@ -115,7 +115,7 @@ class Carving():
 			self.rand_url()
 			print bcolors.WARNING+"°"+ bcolors.ENDC + bcolors.UNDERLINE + "Carving "+self.url+ bcolors.ENDC
 			self.raw_page = self.get_page(args)
-			if args.sqli-only == False:
+			if args.sonly == False:
 				self.carve_url()
 			if args.sqli == True:
 				self.carve_sqli()
@@ -200,7 +200,7 @@ def main():
 	parser = argparse.ArgumentParser(description='Start a bot to detect injectable url.')
 	parser.add_argument('--tor', dest='tor', action='store_true', help='Provide connection with Tor.')
 	parser.add_argument('--sqli', dest='sqli', action='store_true', help='Allow looking for sqli url.')
-	parser.add_argument('--sqli-only', dest='sqli-only', action='store_true', help='Only looking for sqli url.')
+	parser.add_argument('--sonly', dest='sonly', action='store_true', help='Only looking for sqli url.')
 	
 	args = parser.parse_args()
 	
