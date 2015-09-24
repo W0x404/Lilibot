@@ -49,8 +49,8 @@ Then:
 `create user 'lilibot'@'localhost' identified by 'YOU_PASSWORD';`</br>
 `create user 'lilibot'@'%' identified by 'YOU_PASSWORD';`</br>
 
-`grant select, insert on lilibot.* to 'lilibot'@'localhost';`</br>
-`grant select, insert on lilibot.* to 'lilibot'@'%';`</br>
+`grant select, insert, update on lilibot.* to 'lilibot'@'localhost';`</br>
+`grant select, insert, update on lilibot.* to 'lilibot'@'%';`</br>
 
 `flush privileges;`</br>
 ##Allow remote connection
