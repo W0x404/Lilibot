@@ -115,7 +115,7 @@ class Carving():
 			self.rand_url()
 			print bcolors.WARNING+"°"+ bcolors.ENDC + bcolors.UNDERLINE + "Carving "+self.url+ bcolors.ENDC
 			self.raw_page = self.get_page(args)
-			if args.sqli_only == False:
+			if args.sqli-only == False:
 				self.carve_url()
 			if args.sqli == True:
 				self.carve_sqli()
