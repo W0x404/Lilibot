@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #  
 #  
-import MySQLdb, subprocess, re, thread, requests, requesocks
+import MySQLdb, subprocess, re, thread, requests, requesocks, argparse
  
 class bcolors:
     HEADER = '\033[95m'
@@ -39,12 +39,12 @@ class DB():
 		Class usefull to manage database. Made by W. You should replace
 		details by yours
 	"""
-	def __init__(self):
+	def __init__(self, args):
 		print "Gathering database's details..."
-		self.host = "localhost" # replace it by raw_input if you want
-		self.user = "root" # replace it by raw_input if you want
-		self.password = raw_input("Enter password for " + self.user +": ") # dangerous to write the password
-		self.database = "scrapping" # replace it
+		self.host = raw_input("Host: ") # replace it by raw_input if you want
+		self.user = raw_input("User: ") # replace it by raw_input if you want
+		self.password = raw_input("Password: ") # dangerous to write the password
+		self.database = raw_input("Database: ") # replace it
 		self.db = ""
 		self.cursor = ""
 		print "Database's details gathered..."
@@ -106,7 +106,7 @@ class Carving():
 		to insert a first url in the database.
 		> insert into DATABASE value ("http://cyber-exploit.com","http://cyber-exploit.com");
 	"""
-	def __init__(self, database):
+	def __init__(self, database, args):
 		self.database = database
 		print bcolors.WARNING + "Creating carving bot...\n\n" + bcolors.ENDC,
 		   
@@ -114,19 +114,22 @@ class Carving():
 			self.url = ""
 			self.rand_url()
 			print bcolors.WARNING+"°"+ bcolors.ENDC + bcolors.UNDERLINE + "Carving "+self.url+ bcolors.ENDC
-			self.raw_page = self.get_page()
-			self.carve_url()
-			self.carve_sqli()
+			self.raw_page = self.get_page(args)
+			if args.sqli_only == False
+				self.carve_url()
+			if args.sqli == True:
+				self.carve_sqli()
  
 	   
-	def get_page(self):
+	def get_page(self, args):
 		"""
 			Perform a wget in order to collect the source.
 		"""
 		#Initialize a new wrapped requests object
 		session = requesocks.session()
 		#Use Tor for both HTTP and HTTPS
-		session.proxies = {'http': 'socks5://localhost:9050', 'https': 'socks5://localhost:9050'}
+		if args.tor == True:
+			session.proxies = {'http': 'socks5://localhost:9050', 'https': 'socks5://localhost:9050'}
 
 		raw = ""
 		try:
@@ -194,10 +197,16 @@ class Carving():
 		self.url = self.database.query('SELECT url FROM scope ORDER BY RAND() LIMIT 1', r=1)[0][0]
 	   
 def main():
-	database = DB() # create the db
-	thread.start_new_thread(Carving(database)) # create one thread.
+	parser = argparse.ArgumentParser(description='Process some integers.')
+	parser.add_argument('--tor', dest='tor', action='store_true', help='Provide connection with Tor.')
+	parser.add_argument('--sqli', dest='sqli', action='store_true', help='Allow looking for sqli url.')
+	parser.add_argument('--sqli-only', dest='sqli-only', action='store_true', help='Only looking for sqli url.')
+	
+	args = parser.parse_args()
+	
+	database = DB(args) # create the db
+	thread.start_new_thread(Carving(database, args)) # create one thread.
 	return 0
  
 if __name__ == '__main__':
 	main()
-
