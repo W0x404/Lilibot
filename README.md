@@ -23,14 +23,11 @@ In dev, any release has been published yet.
 `create table sqli (url varchar(200));`
 
 ###Insert a url in the scope table.
-`insert into table sqli ("http://ianonavy.com","http://ianonavy.com/files/urls.txt");`
+`insert into scope values ("http://ianonavy.com", "http://ianonavy.com/files/urls.txt");`
 This url provide a long list of websites. A good start.
 
 ##Download dependencies (easy ~40 secs)
-`sudo apt-get update`
-`sudo apt-get install python-pip`
-`sudo apt-get install python-mysqldb`
-`sudo pip install requesocks`
+`sudo apt-get update && apt-get install python-pip python-mysqldb && sudo pip install requesocks`
 
 #Run the .py with option
 * `--tor` Provide a connection throw Tor
