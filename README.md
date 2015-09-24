@@ -32,7 +32,7 @@ In dev, any release has been published yet.
 This url provide a long list of websites. A good start.
 
 ##Download dependencies (easy ~40 secs)
-`sudo apt-get update && apt-get install python-pip python-mysqldb && sudo pip install requesocks` 
+`sudo apt-get update && sudo apt-get install python-pip python-mysqldb && sudo pip install requesocks` 
 
 #Run the .py with option
 * `--tor` Provide a connection throw Tor
