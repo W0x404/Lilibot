@@ -14,16 +14,20 @@ In dev, any release has been published yet.
 
 # How to Install ?
 
-* Set up a database`
+##Set up a database`
 `create database lilibot;`
 
-* Feed the database with scope table and sqli table.
+##Feed the database with scope table and sqli table.
 `use lilibot;`
-`create table scope ( host varchar(200), url varchar(200), unique (url);`
+`create table scope ( host varchar(200), url varchar(200), unique (url));`
 `create table sqli (url varchar(200));`
 
-* Insert a url in the scope table.
+##Insert a url in the scope table.
 `insert into table sqli ("http://ianonavy.com","http://ianonavy.com/files/urls.txt");`
-This url provide a long list of website. A good start.
+This url provide a long list of websites. A good start.
 
-* Run the .py
+#Run the .py with option
+* `--tor` Provide a connection throw Tor
+* `--sqli` Allow vulnerable url detection
+* `--sonly` Only dectect vulnerable dection. Any url will be added to the scope.
+
