@@ -14,9 +14,23 @@ In dev, any release has been published yet.
 
 # How to Install ?
 
-* Set up a database
-* Feed the database with scope table and sqli table.
-* Insert a url in the scope table.
-* change the detail in the code
+##Set up a database (easy ~20 secs)
+`create database lilibot;`
 
-* Run the .py
+###Feed the database with scope table and sqli table.
+`use lilibot;`
+`create table scope ( host varchar(200), url varchar(200), unique (url));`
+`create table sqli (url varchar(200));`
+
+###Insert a url in the scope table.
+`insert into scope values ("http://ianonavy.com", "http://ianonavy.com/files/urls.txt");`
+This url provide a long list of websites. A good start.
+
+##Download dependencies (easy ~40 secs)
+`sudo apt-get update && apt-get install python-pip python-mysqldb && sudo pip install requesocks`
+
+#Run the .py with option
+* `--tor` Provide a connection throw Tor
+* `--sqli` Allow vulnerable url detection
+* `--sonly` Only dectect vulnerable dection. Any url will be added to the scope.
+
