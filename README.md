@@ -7,7 +7,11 @@ SQLi - SQLinjection bot. Not a botnet, not viral bot,  not a malware.
 - Python 2.7
 - Linux
 
-Creat bot, crawling all internet url in order to find vulnerable url and inject it with sqlmap.
+
+Lilibot is a bot, crawling each web page in order to gather url. After collecting the url, the bot detects URLs containing a potential SQL injection.
+
+First created to detect the vulnerabilities, the next goal is to use the robot to highlight the number of exploitable vulnerabilities.
+
 In dev, any release has been published yet.
 
 *Save time. Keep the control.*
