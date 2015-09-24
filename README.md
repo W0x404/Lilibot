@@ -40,6 +40,7 @@ This url provide a long list of websites. A good start.
 * `--sonly` Only dectect vulnerable dection. Any url will be added to the scope.
 
 #Remote Access / User ( easy ~120 secs )
+If you want to deploy **lilibot** as a master-slave API, you need to set the database on a standalone server and connect by remote access all bots.
 *Connect to your mysql server with your id.*
 
 ##Create remote user
@@ -63,5 +64,5 @@ Change `bind-adress = 127.0.0.1` by </br>
        `bind-adress = YOUR_PUBLIC_IP`
 
 After, do `sudo service mysql restart`.
-###Test your connection.
+###Test your connection with an other pc / slave.
 `mysql -ulilibot -pYOUR_PASSWORD -hYOU.PULIC.IP.ADRESS -Dlilibot`
