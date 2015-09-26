@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #  
 #  
-import MySQLdb, subprocess, re, thread, requests, requesocks, argparse
+import MySQLdb, subprocess, re, thread, requests, argparse
  
 class bcolors:
     HEADER = '\033[95m'
@@ -125,18 +125,17 @@ class Carving():
 	   
 	def get_page(self, args):
 		"""
-			Perform a wget in order to collect the source.
+			perform requests
 		"""
-		#Initialize a new wrapped requests object
-		session = requesocks.session()
-		#Use Tor for both HTTP and HTTPS
-		if args.tor == True:
-			session.proxies = {'http': 'socks5://localhost:9050', 'https': 'socks5://localhost:9050'}
-
 		raw = ""
+		http_proxy = "http://localhost:9050"
+		proxyDict = { "http": http_proxy }
 		try:
-			raw = session.get(self.url)
-			raw = raw.text
+			if args.tor == False:
+				raw = requests.get(self.url, timeout=3)
+			if args.tor == True:
+				raw = requests.get(self.url, timeout=3, proxies=proxyDict)
+			raw = raw.content
 			return raw
 		except:
 			raw = ""
@@ -163,9 +162,8 @@ class Carving():
 				print bcolors.HEADER +"Adding "+str(len(urls))+bcolors.ENDC+" to the scope. Duplicated url(s) will be ignored."
 				#little weird but working fine.
 				for e in url_dn:
-					if (self.database.query("select count(host) from scope where host like '%s';" % (e[0][0]), r=1)[0][0] < 40 ):
-						q = 'INSERT IGNORE INTO scope VALUES ("%s", "%s") ON DUPLICATE KEY UPDATE url = url;' % (e[0][0], e[1])
-						self.database.query(q)
+					q = 'INSERT IGNORE INTO scope VALUES ("%s", "%s") ON DUPLICATE KEY UPDATE url = url;' % (e[0][0], e[1])
+					self.database.query(q)
 		except:
 			pass
 		   
@@ -203,6 +201,7 @@ def main():
 	parser.add_argument('--tor', dest='tor', action='store_true', help='Provide connection with Tor.')
 	parser.add_argument('--sqli', dest='sqli', action='store_true', help='Allow looking for sqli url.')
 	parser.add_argument('--sonly', dest='sonly', action='store_true', help='Only looking for sqli url.')
+	parser.add_argument('--debug', dest='debug', action='store_true', help='Debug display.')
 	
 	args = parser.parse_args()
 	
