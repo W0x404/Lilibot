@@ -128,8 +128,8 @@ class Carving():
 			perform requests
 		"""
 		raw = ""
-		http_proxy = "http://localhost:9050"
-		proxyDict = { "http": http_proxy }
+		sock_proxy = "localhost:9050"
+		proxyDict = { "socks": sock_proxy }
 		try:
 			if args.tor == False:
 				raw = requests.get(self.url, timeout=3)
