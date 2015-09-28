@@ -35,9 +35,13 @@ This url provide a long list of websites. A good start.
 `sudo apt-get update && sudo apt-get install python-mysqldb` 
 
 #Run the .py with option
-* `--tor` Provide a connection throw Tor
-* `--sqli` Allow vulnerable url detection
-* `--sonly` Only dectect vulnerable dection. Any url will be added to the scope.
+* `--tor, -T`             Provide connection with Tor.
+* `--sqli, -s`            Allow looking for sqli url.
+* `--sonly, -S`           Only looking for sqli url.
+* `--host HOST, -H HOST`  Database s host value.
+* `--user USER, -u USER`  Database s user value.
+* `--pass PASSWORD, -p PASSWORD`
+* `--db DB, -d DB`  Database value.
 
 #Remote Access / User ( easy ~120 secs )
 If you want to deploy **lilibot** as a master-slave API, you need to set the database on a standalone server and connect by remote access all bots.
