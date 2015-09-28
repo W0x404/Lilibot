@@ -41,7 +41,6 @@ class DB():
 	"""
 	def __init__(self, host=None, user=None, password=None, database=None):
 		print "Gathering database's details..."
-		print host, user, password, database
 
 		self.host = self.collector(host, "Host: ")
 		self.user = self.collector(user, "User: ")
