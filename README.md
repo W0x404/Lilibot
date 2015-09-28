@@ -42,7 +42,7 @@ This url provide a long list of websites. A good start.
 ##Download dependencies (easy ~40 secs)
 `sudo apt-get update && sudo apt-get install python-mysqldb` 
 
-#Run the .py with option
+#Run the .py with options
 * `--tor, -T`             Provide connection with Tor.
 * `--sqli, -s`            Allow looking for sqli url.
 * `--sonly, -S`           Only looking for sqli url.
