@@ -39,17 +39,25 @@ class DB():
 		Class usefull to manage database. Made by W. You should replace
 		details by yours
 	"""
-	def __init__(self, args):
+	def __init__(self, host=None, user=None, password=None, database=None):
 		print "Gathering database's details..."
-		self.host = raw_input("Host: ") # replace it by raw_input if you want
-		self.user = raw_input("User: ") # replace it by raw_input if you want
-		self.password = raw_input("Password: ") # dangerous to write the password
-		self.database = raw_input("Database: ") # replace it
+		print host, user, password, database
+
+		self.host = self.collector(host, "Host: ")
+		self.user = self.collector(user, "User: ")
+		self.password = self.collector(password, "Password: ")
+		self.database = self.collector(database, "Database: ")
 		self.db = ""
 		self.cursor = ""
 		print "Database's details gathered..."
 		self.connect() # auto connect. Perfect.
-	   
+
+	def collector(self, argument, input):
+		if (argument == None):
+			return raw_input(input)
+		if (argument != None):
+			return argument
+
 	def connect(self):
 		"""
 			Function to test the connection to your database.
@@ -197,16 +205,20 @@ class Carving():
 		self.url = self.database.query('SELECT url FROM scope ORDER BY RAND() LIMIT 1', r=1)[0][0]
 	   
 def main():
-	parser = argparse.ArgumentParser(description='Start a bot to detect injectable url.')
-	parser.add_argument('--tor', dest='tor', action='store_true', help='Provide connection with Tor.')
-	parser.add_argument('--sqli', dest='sqli', action='store_true', help='Allow looking for sqli url.')
-	parser.add_argument('--sonly', dest='sonly', action='store_true', help='Only looking for sqli url.')
+	parser = argparse.ArgumentParser(description='Start a bot to detect injectable url.', prog='lilibot.py')
+	parser.add_argument('--tor','-T', dest='tor', action='store_true', help='Provide connection with Tor.')
+	parser.add_argument('--sqli','-s', dest='sqli', action='store_true', help='Allow looking for sqli url.')
+	parser.add_argument('--sonly','-S', dest='sonly', action='store_true', help='Only looking for sqli url.')
 	parser.add_argument('--debug', dest='debug', action='store_true', help='Debug display.')
+	parser.add_argument('--host','-H', dest='host', help='Database s host value.')
+	parser.add_argument('--user','-u', dest='user', help='Database s user value.')
+	parser.add_argument('--pass','-p', dest='password', help='Database s password value.')
+	parser.add_argument('--db','-d', dest='db', help='Database s db value.')
 	
 	args = parser.parse_args()
 	
-	database = DB(args) # create the db
-	thread.start_new_thread(Carving(database, args)) # create one thread.
+	database = DB(args.host,args.user, args.password, args.db) # create the db
+	Carving(database, args)
 	return 0
  
 if __name__ == '__main__':
