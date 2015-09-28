@@ -2,11 +2,19 @@
 
 # Lilibot
 ## Any release has been published yet /!\
-![Version](https://img.shields.io/badge/Version-0.1-lightgrey.svg?style=flat-square) 
+![Version](https://img.shields.io/badge/Version-0.3-lightgrey.svg?style=flat-square)</br> 
 SQLi - SQLinjection bot. Not a botnet, not viral bot,  not a malware.
 - Python 2.7
 - Linux
 
+**Version 0.1:**First commit. The bot can scan.</br>
+**Version 0.2:**The bot can scan through Tor.</br>
+**Version 0.3:**Improving perf. Add option and documentation.</br>
+**Version 0.4:**(in dev)Improving perf and insert function.</br>
+
+**Version < 0.5:**
+       The bot is not able to inject and exploit. Only scanning, probing, crawling.
+       
 
 Lilibot is a bot, crawling each web page in order to gather url. After collecting the url, the bot detects URLs containing a potential SQL injection.
 
