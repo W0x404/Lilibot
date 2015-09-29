@@ -2,11 +2,19 @@
 
 # Lilibot
 ## Any release has been published yet /!\
-![Version](https://img.shields.io/badge/Version-0.1-lightgrey.svg?style=flat-square) 
+![Version](https://img.shields.io/badge/Version-0.3-lightgrey.svg?style=flat-square)</br> 
 SQLi - SQLinjection bot. Not a botnet, not viral bot,  not a malware.
 - Python 2.7
 - Linux
 
+**Version 0.1:**First commit. The bot can scan.</br>
+**Version 0.2:**The bot can scan through Tor.</br>
+**Version 0.3:**Improving perf. Add option and documentation.</br>
+**Version 0.4:**(in dev)Improving perf and insert function.</br>
+
+**Version < 0.5:**
+       The bot is not able to inject and exploit. Only scanning, probing, crawling.
+       
 
 Lilibot is a bot, crawling each web page in order to gather url. After collecting the url, the bot detects URLs containing a potential SQL injection.
 
@@ -34,10 +42,18 @@ This url provide a long list of websites. A good start.
 ##Download dependencies (easy ~40 secs)
 `sudo apt-get update && sudo apt-get install python-mysqldb` 
 
-#Run the .py with option
-* `--tor` Provide a connection throw Tor
-* `--sqli` Allow vulnerable url detection
-* `--sonly` Only dectect vulnerable dection. Any url will be added to the scope.
+#Run the .py with options
+* `--tor, -T`             Provide connection with Tor.
+* `--sqli, -s`            Allow looking for sqli url.
+* `--sonly, -S`           Only looking for sqli url.
+* `--host HOST, -H HOST`  Database s host value.
+* `--user USER, -u USER`  Database s user value.
+* `--pass PASSWORD, -p PASSWORD`
+* `--db DB, -d DB`  Database value.
+
+Exemple : </br>
+`python lilibot.py -H 192.168.0.1 -u lilibot -p password -d lilibot --sqli`
+
 
 #Remote Access / User ( easy ~120 secs )
 If you want to deploy **lilibot** as a master-slave API, you need to set the database on a standalone server and connect by remote access all bots.
