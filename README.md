@@ -32,11 +32,11 @@ In dev, any release has been published yet.
 
 ###Feed the database with scope table and sqli table.
 `use lilibot;`</br>
-`create table scope ( host varchar(200), url varchar(200), unique (url));`</br>
-`create table sqli (url varchar(200));`</br>
+`create table sites ( url varchar(200)) engine=archive;`</br>
+`create table sqli (url varchar(200)) engine=archive;`</br>
 
 ###Insert a url in the scope table.
-`insert into scope values ("http://ianonavy.com", "http://ianonavy.com/files/urls.txt");`</br>
+`insert into sites values ("http://ianonavy.com/files/urls.txt");`</br>
 This url provide a long list of websites. A good start.
 
 ##Download dependencies (easy ~40 secs)
