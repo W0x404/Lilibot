@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #  
 #  
-import MySQLdb, subprocess, re, thread, requests, argparse
+import MySQLdb, subprocess, re, thread, requests, argparse, sys
  
 class bcolors:
     HEADER = '\033[95m'
@@ -90,7 +90,10 @@ class DB():
 				print data
 			# r for return mode
 			if (r==1):
-				return data
+				if data[0][0] != None:
+					return data
+				if data[0][0]  == None:
+					self.query(sql, r=1)
 		   
 		except MySQLdb.Error, e:
 			# Rollback in case there is any error
@@ -160,20 +163,17 @@ class Carving():
 		try:
 			urls = re.findall(regex_url, self.raw_page)
 			urls = set(urls)
-			
-			url_dn = list()
-			for e in urls:
-				url_dn.append((re.findall(regex_dn,e), e))
-			
+						
 			if (len(urls) > 0):
 				print bcolors.HEADER +"Adding "+str(len(urls))+bcolors.ENDC+" to the scope. Duplicated url(s) will be ignored."
 				#little weird but working fine.
-				for e in url_dn:
-					q = 'INSERT IGNORE INTO scope VALUES ("%s", "%s") ON DUPLICATE KEY UPDATE url = url;' % (e[0][0], e[1])
-					self.database.query(q)
+				urls_q = ""
+				for e in urls:
+				        urls_q += "(\""+e+"\"), "
+				q = 'INSERT IGNORE INTO sites (url) VALUES %s ON DUPLICATE KEY UPDATE url = url;' % urls_q[:-2]
+				self.database.query(q)
 		except:
-			pass
-		   
+			pass		   
 	def carve_sqli(self):
 		"""
 			Regex to detect php url and store it.
@@ -202,7 +202,7 @@ class Carving():
 			Get a rand url for the carving. need 1 url in the database to work.
 		"""
 		self.url = self.database.query('SELECT url FROM scope ORDER BY RAND() LIMIT 1', r=1)[0][0]
-	   
+			
 def main():
 	parser = argparse.ArgumentParser(description='Start a bot to detect injectable url.', prog='lilibot.py')
 	parser.add_argument('--tor','-T', dest='tor', action='store_true', help='Provide connection with Tor.')
