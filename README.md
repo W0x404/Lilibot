@@ -32,8 +32,8 @@ In dev, any release has been published yet.
 
 ###Feed the database with scope table and sqli table.
 `use lilibot;`</br>
-`create table sites ( url varchar(200)) engine=archive;`</br>
-`create table sqli (url varchar(200)) engine=archive;`</br>
+`create table sites ( ID int NOT NULL AUTO_INCREMENT, url varchar(200), unique (url), PRIMARY KEY (ID));`</br>
+`create table sqli ( ID int NOT NULL AUTO_INCREMENT, url varchar(200), unique (url), PRIMARY KEY (ID));;`</br>
 
 ###Insert a url in the scope table.
 `insert into sites values ("http://ianonavy.com/files/urls.txt");`</br>
@@ -62,11 +62,9 @@ Then:
 
 ##Create remote user
 `use lilibot;`</br> 
-`create user 'lilibot'@'localhost' identified by 'YOU_PASSWORD';`</br>
-`create user 'lilibot'@'%' identified by 'YOU_PASSWORD';`</br>
 
-`grant select, insert, update on lilibot.* to 'lilibot'@'localhost';`</br>
-`grant select, insert, update on lilibot.* to 'lilibot'@'%';`</br>
+`grant select, insert, update on lilibot.* to 'lilibot'@'localhost' identified by 'YOU_PASSWORD';`</br>
+`grant select, insert, update on lilibot.* to 'lilibot'@'%' identified by 'YOU_PASSWORD';`</br>
 
 `flush privileges;`</br>
 ##Allow remote connection
