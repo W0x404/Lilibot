@@ -36,7 +36,7 @@ In dev, any release has been published yet.
 `create table sqli ( ID int NOT NULL AUTO_INCREMENT, url varchar(200), unique (url), PRIMARY KEY (ID));;`</br>
 
 ###Insert a url in the scope table.
-`insert into sites values ("http://ianonavy.com/files/urls.txt");`</br>
+`insert into sites (url) values ("http://ianonavy.com/files/urls.txt");`</br>
 This url provide a long list of websites. A good start.
 
 ##Download dependencies (easy ~40 secs)
