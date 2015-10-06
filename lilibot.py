@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #  
 #  
-import MySQLdb, subprocess, re, thread, requests, argparse, sys
+import MySQLdb, subprocess, re, thread, requests, argparse, sys, random
  
 class bcolors:
     HEADER = '\033[95m'
@@ -118,11 +118,17 @@ class Carving():
 	"""
 	def __init__(self, database, args):
 		self.database = database
-		print bcolors.WARNING + "Creating carving bot...\n\n" + bcolors.ENDC,
+		self.scope = list()
+		self.url = ""
+
+		print bcolors.WARNING + "Creating carving bot..." + bcolors.ENDC,
 		   
 		while (1):
-			self.url = ""
-			self.rand_url()
+			if (len(self.scope) == 0):
+				self.rand_url()
+			if (len(self.scope) > 0):
+				self.url = random.choice(self.scope)
+
 			print bcolors.WARNING+"°"+ bcolors.ENDC + bcolors.UNDERLINE + "Carving "+self.url+ bcolors.ENDC
 			self.raw_page = self.get_page(args)
 			if args.sonly == True:
@@ -164,16 +170,22 @@ class Carving():
 			urls = re.findall(regex_url, self.raw_page)
 			urls = set(urls)
 						
-			if (len(urls) > 0):
+			if (len(urls) > 0 and len(self.scope) < 2000 ):
 				print bcolors.HEADER +"Adding "+str(len(urls))+bcolors.ENDC+" to the scope. Duplicated url(s) will be ignored."
 				#little weird but working fine.
+				self.scope.extend(urls)
+				
+			elif len(self.scope)>=2000:
 				urls_q = ""
-				for e in urls:
-				        urls_q += "(\""+e+"\"), "
-				q = 'INSERT IGNORE INTO sites (url) VALUES %s ON DUPLICATE KEY UPDATE url = url;' % urls_q[:-2]
-				self.database.query(q)
+                                for e in self.scope:
+                                        urls_q += "(\""+e+"\"), "
+                                q = 'INSERT IGNORE INTO sites (url) VALUES %s ON DUPLICATE KEY UPDATE url = url;' % urls_q[:-2]
+				print bcolors.WARNING + "Adding "+str(len(self.scope))+ bcolors.ENDC+" to the database."
+                                self.database.query(q)
+				self.scope = list()
 		except:
 			pass		   
+
 	def carve_sqli(self):
 		"""
 			Regex to detect php url and store it.
@@ -185,7 +197,7 @@ class Carving():
 				print bcolors.OKBLUE + bcolors.BOLD + "Adding "+str(len(urls))+ bcolors.ENDC+" to the sqli table. Duplicated url(s) will be ignored."
 				#little weird but working fine.
 				for e in urls:
-					self.database.query('INSERT IGNORE INTO sqli VALUES ("%s") ON DUPLICATE KEY UPDATE url = url;' % (e))
+					self.database.query('INSERT IGNORE INTO sqli (url) VALUES ("%s") ON DUPLICATE KEY UPDATE url = url;' % (e))
 		except:
 			pass
    
@@ -201,7 +213,14 @@ class Carving():
 		"""
 			Get a rand url for the carving. need 1 url in the database to work.
 		"""
-		self.url = self.database.query('SELECT url FROM scope ORDER BY RAND() LIMIT 1', r=1)[0][0]
+		try:
+			cnt = 0
+			cnt = self.database.query('select count(url) from sites;', r=1)[0][0]
+			cnt = random.randint(0, cnt-1)
+			print bcolors.WARNING + "Selecting a new url from the database." + bcolors.ENDC
+			self.url = self.database.query('select url from sites where id='+ str(cnt) +';', r=1)[0][0]
+		except:
+			self.rand_url()
 			
 def main():
 	parser = argparse.ArgumentParser(description='Start a bot to detect injectable url.', prog='lilibot.py')
