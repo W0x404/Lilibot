@@ -163,7 +163,7 @@ class Carving():
 			Regex to detect http url. https is not pertinent: too secure.
 			Store the url.
 		"""
-		regex_url = ur"(http://[\.[\w_-][^\[\]<>\n \"\(\)]+]*)"
+		regex_url = ur"(http://[\.[\w_-][^\[\]<>\n \"\(\),;\\]+]*)"
 		regex_dn = ur"(http://[\.[\w_-]*)"
 		
 		try:
